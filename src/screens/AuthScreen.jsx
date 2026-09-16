@@ -249,6 +249,21 @@ export const AuthScreen = () => {
       kycValid
     : emailValid && password.length > 0;
 
+  // Explains in plain language why the submit button is still disabled, so the user
+  // isn't left staring at a greyed-out button with no idea what to fix.
+  const blockingReason = (() => {
+    if (!isSignup) return null;
+    if (!name.trim()) return 'Enter your full name.';
+    if (!emailValid) return 'Enter a valid email address.';
+    if (!phone.trim()) return 'Enter your phone number.';
+    if (password.length < 6) return 'Password must be at least 6 characters.';
+    if (password !== confirmPassword) return 'Passwords do not match.';
+    if (!agreedToTerms) return 'Please agree to the Terms & Policy.';
+    if (!kycValid) return 'Upload valid Aadhaar, PAN & Voter ID documents.';
+    return null;
+  })();
+  const hasStartedForm = Boolean(name.trim() || email || phone.trim() || password || confirmPassword);
+
   const handleSubmit = () => {
     if (!canSubmit || authLoading) return;
     if (isSignup) {
@@ -438,6 +453,8 @@ export const AuthScreen = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter your password"
                 isPartner={isPartner}
+                error={confirmPassword && password !== confirmPassword ? 'Passwords do not match.' : undefined}
+                valid={Boolean(confirmPassword) && password === confirmPassword}
                 endAdornment={
                   <PasswordToggle
                     shown={showConfirmPassword}
@@ -489,6 +506,12 @@ export const AuthScreen = () => {
           <span>{authLoading ? 'Please wait…' : isSignup ? 'Create Account' : 'Log In'}</span>
           {!authLoading && <ArrowRight size={18} />}
         </button>
+
+        {isSignup && blockingReason && hasStartedForm && (
+          <p className={`-mt-2 text-center text-xs font-semibold ${isPartner ? 'text-amber-300' : 'text-red-500'}`}>
+            {blockingReason}
+          </p>
+        )}
 
         <div className={`text-center text-xs ${isPartner ? 'text-[#dce1ff]' : 'text-[#4e5c92]'}`}>
           {isSignup ? 'Already have an account?' : 'New to KOODAM?'}{' '}

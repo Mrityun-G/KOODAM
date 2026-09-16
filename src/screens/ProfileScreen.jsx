@@ -4,7 +4,8 @@ import { Header } from '../components/Header';
 import { NavigationBar } from '../components/NavigationBar';
 
 export const ProfileScreen = () => {
-  const { userProfile, role, navigateTo, handleSelectMember, handleSelectPartner, logout } = useApp();
+  const { userProfile, partnerProfile, role, navigateTo, logout } = useApp();
+  const profile = role === 'partner' ? partnerProfile : userProfile;
 
   const menuItems = [
     { id: 'editProfile', icon: 'edit', label: 'Edit Profile', desc: 'Name, phone, email & photo', screen: 'editProfile' },
@@ -23,13 +24,13 @@ export const ProfileScreen = () => {
         <div className="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center gap-3">
           <img
             className="w-16 h-16 rounded-2xl object-cover shadow-xs shrink-0"
-            alt={userProfile.name}
-            src={userProfile.avatar}
+            alt={profile.name}
+            src={profile.avatar}
           />
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-bold text-[#0b1c30] truncate">{userProfile.name}</h2>
-            <p className="text-xs text-slate-500 truncate">{userProfile.email}</p>
-            <p className="text-xs text-slate-500 truncate">{userProfile.phone}</p>
+            <h2 className="text-sm font-bold text-[#0b1c30] truncate">{profile.name}</h2>
+            <p className="text-xs text-slate-500 truncate">{profile.email}</p>
+            <p className="text-xs text-slate-500 truncate">{profile.phone}</p>
             <span className="inline-block mt-1 text-[10px] font-bold text-[#a14000] bg-[#eff4ff] px-2 py-0.5 rounded-full">
               {role === 'partner' ? 'Service Partner' : 'Community Member'}
             </span>
@@ -62,22 +63,6 @@ export const ProfileScreen = () => {
             </button>
           ))}
         </div>
-
-        {/* Role Switch */}
-        <button
-          onClick={role === 'partner' ? handleSelectMember : handleSelectPartner}
-          className="w-full flex items-center gap-3 p-3.5 bg-white rounded-2xl shadow-xs border border-slate-100 hover:bg-slate-50 active:bg-slate-100 transition-colors text-left"
-        >
-          <div className="w-9 h-9 rounded-full bg-[#dce1ff] flex items-center justify-center text-[#4e5c92] shrink-0">
-            <span className="material-symbols-outlined text-[18px]">swap_horiz</span>
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-bold text-[#0b1c30]">
-              {role === 'partner' ? 'Switch to Community Member' : 'Switch to Service Partner'}
-            </p>
-            <p className="text-[11px] text-slate-500 truncate">Change how you use KOODAM</p>
-          </div>
-        </button>
 
         {/* Log Out */}
         <button

@@ -41,6 +41,14 @@ export const PartnerDashboard = () => {
         <div className="h-16 px-4 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <button
+              aria-label="Back to Resident View"
+              onClick={handleSelectMember}
+              className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full bg-[#eff4ff] hover:bg-[#dce9ff] text-[#a14000] transition-all active:scale-95 border border-slate-200"
+              title="Return to resident view"
+            >
+              <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+            </button>
+            <button
               aria-label="Go to Partner Home"
               onClick={() => navigateTo('partner')}
               className="shrink-0 active:scale-95 transition-transform"
@@ -65,18 +73,14 @@ export const PartnerDashboard = () => {
             <button
               aria-label="Profile & Settings"
               onClick={() => navigateTo('profile', 'profile')}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-[#0b1c30] hover:bg-[#eff4ff] active:scale-95 transition-all"
               title="Profile & settings"
+              className="w-10 h-10 flex items-center justify-center rounded-full p-0.5 hover:ring-2 hover:ring-[#ff6a00]/30 active:scale-95 transition-all"
             >
-              <span className="material-symbols-outlined text-[20px]">person</span>
-            </button>
-            <button
-              aria-label="Back to Resident View"
-              onClick={handleSelectMember}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-[#eff4ff] hover:bg-[#dce9ff] text-[#a14000] transition-all active:scale-95 border border-slate-200"
-              title="Return to resident view"
-            >
-              <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+              <img
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-slate-200"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1KUaHaxx9-0zLYxXwe1qxLJ0jJYPLqCFsAjNOyvD60uX5AVr6RK2dvGziPMtH59A3aJOvnqyPP4w30p4E-MWzvTTddgIC6_jhVaV3Vv4v4zJDxVLTZ4QyusKSFBoaOmYL-PNBEX0PpYEvExLZfM8KanBylMX25cDla34VsABdoAJ66XZXU9OnKsInNA-vLjrtqUCQUpQACDv33Rg9utw_2rQVKnXf6z5x0U5ZiTD0NIvTo9L6FiJNEg"
+              />
             </button>
           </div>
         </div>

@@ -3,15 +3,17 @@ import { useApp } from '../context/AppContext';
 import { SubHeader } from '../components/SubHeader';
 
 export const EditProfileScreen = () => {
-  const { userProfile, updateUserProfile, navigateTo, showToast } = useApp();
+  const { userProfile, updateUserProfile, partnerProfile, updatePartnerProfile, role, navigateTo, showToast } = useApp();
+  const profile = role === 'partner' ? partnerProfile : userProfile;
+  const updateProfile = role === 'partner' ? updatePartnerProfile : updateUserProfile;
 
-  const [name, setName] = useState(userProfile.name);
-  const [email, setEmail] = useState(userProfile.email);
-  const [phone, setPhone] = useState(userProfile.phone);
+  const [name, setName] = useState(profile.name);
+  const [email, setEmail] = useState(profile.email);
+  const [phone, setPhone] = useState(profile.phone);
 
   const handleSave = () => {
     if (!name.trim() || !email.trim() || !phone.trim()) return;
-    updateUserProfile({ name: name.trim(), email: email.trim(), phone: phone.trim() });
+    updateProfile({ name: name.trim(), email: email.trim(), phone: phone.trim() });
     navigateTo('profile', 'profile');
   };
 
@@ -23,8 +25,8 @@ export const EditProfileScreen = () => {
         <div className="flex flex-col items-center gap-2">
           <img
             className="w-20 h-20 rounded-2xl object-cover shadow-xs"
-            alt={userProfile.name}
-            src={userProfile.avatar}
+            alt={profile.name}
+            src={profile.avatar}
           />
           <button
             onClick={() => showToast('Photo upload coming soon!')}

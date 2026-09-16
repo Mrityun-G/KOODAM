@@ -21,6 +21,18 @@ const DESTINATION_COORDS = { lat: 12.9784, lng: 77.6408 };
 // Firebase Realtime Database keys can't contain ".", "#", "$", "[", "]" — order IDs like "#KD-8924" need stripping.
 const toDbKey = (orderId) => orderId.replace(/[.#$[\]]/g, '');
 
+// Error codes that mean the Firebase project itself isn't fully set up (e.g. Email/Password
+// sign-in not enabled in the console) rather than a real problem with what the user entered.
+// When we hit one of these, fall back to local-only demo mode instead of blocking the user.
+const AUTH_SETUP_ERROR_CODES = [
+  'auth/configuration-not-found',
+  'auth/operation-not-allowed',
+  'auth/invalid-api-key',
+  'auth/api-key-not-valid',
+  'auth/project-not-found'
+];
+const isAuthSetupError = (err) => AUTH_SETUP_ERROR_CODES.includes(err?.code);
+
 // Translates Firebase Auth error codes into friendly, user-facing copy.
 const authErrorMessage = (err) => {
   const code = err?.code || '';
@@ -65,6 +77,14 @@ export const AppProvider = ({ children }) => {
     email: 'priya.sharma@example.com',
     phone: '+91 98765 12345',
     avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZKnQP42EPG0JORpP5bTXuIreTz7lfmiiSke3JZzhdqFV7Pjd2tXztHMC9EFtcT5E4kJn8YRuq5kEZ2bY4nLB26pkktCdavk6F9afmmNcRO2-78-t3OIh-d6M4MEHLzSSTtgitcy1iLAAEEID2qFcx87ghwK_nevrbzFgkGapbKiIL-k7CKiXuYJOLFBuvsbd1Yh0UejQrUggO7n7AEewo0rMhrh8u93xBcXUG6Blrutcyp3EPmw7TGw'
+  });
+
+  // Service Partner Profile & Settings State
+  const [partnerProfile, setPartnerProfile] = useState({
+    name: 'Arun Varma',
+    email: 'arun.varma@example.com',
+    phone: '+91 98765 43210',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD1KUaHaxx9-0zLYxXwe1qxLJ0jJYPLqCFsAjNOyvD60uX5AVr6RK2dvGziPMtH59A3aJOvnqyPP4w30p4E-MWzvTTddgIC6_jhVaV3Vv4v4zJDxVLTZ4QyusKSFBoaOmYL-PNBEX0PpYEvExLZfM8KanBylMX25cDla34VsABdoAJ66XZXU9OnKsInNA-vLjrtqUCQUpQACDv33Rg9utw_2rQVKnXf6z5x0U5ZiTD0NIvTo9L6FiJNEg'
   });
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
@@ -329,8 +349,12 @@ export const AppProvider = ({ children }) => {
     try {
       let cred = null;
       if (isFirebaseConfigured) {
-        cred = await createUserWithEmailAndPassword(auth, email, password);
-        if (name) await updateProfile(cred.user, { displayName: name });
+        try {
+          cred = await createUserWithEmailAndPassword(auth, email, password);
+          if (name) await updateProfile(cred.user, { displayName: name });
+        } catch (err) {
+          if (!isAuthSetupError(err)) throw err;
+        }
       }
       setUserProfile(prev => ({
         ...prev,
@@ -386,7 +410,11 @@ export const AppProvider = ({ children }) => {
     setAuthLoading(true);
     try {
       if (isFirebaseConfigured) {
-        await signInWithEmailAndPassword(auth, email, password);
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          if (!isAuthSetupError(err)) throw err;
+        }
       }
       if (email) setUserProfile(prev => ({ ...prev, email }));
       enterRole(targetRole);
@@ -432,6 +460,11 @@ export const AppProvider = ({ children }) => {
 
   const updateUserProfile = (updates) => {
     setUserProfile(prev => ({ ...prev, ...updates }));
+    showToast('Profile updated successfully!');
+  };
+
+  const updatePartnerProfile = (updates) => {
+    setPartnerProfile(prev => ({ ...prev, ...updates }));
     showToast('Profile updated successfully!');
   };
 
@@ -658,6 +691,8 @@ export const AppProvider = ({ children }) => {
         requestPasswordReset,
         userProfile,
         updateUserProfile,
+        partnerProfile,
+        updatePartnerProfile,
         notificationsEnabled,
         setNotificationsEnabled,
         changePassword,
