@@ -13,20 +13,10 @@ export const WelcomeScreen = () => {
       card1Role: 'Seek Help',
       card1Title: 'I Need Help / Book Services',
       card1Desc: 'Find trusted local helpers, handymen, electricians, and community volunteers.',
-      card1Points: [
-        'Verified Neighbors & Background Checked',
-        'Instant Local Booking & Live Tracking',
-        'Fair & Transparent Neighborhood Pricing'
-      ],
       card1Btn: 'Continue as Community Member',
       card2Role: 'Provide Service',
       card2Title: 'I Want to Help / Provide Services',
       card2Desc: 'Offer your skills, grow your local client base, and earn with neighborhood trust.',
-      card2Points: [
-        'Zero Commission for Your First 30 Days',
-        'Flexible Hours & Hyperlocal Requests',
-        'Direct UPI Payouts with Zero Lock-in'
-      ],
       card2Btn: 'Join as Service Partner',
       card1SignupLink: 'New here? Create an account',
       card2SignupLink: 'New Service Partner? Create an account',
@@ -41,20 +31,10 @@ export const WelcomeScreen = () => {
       card1Role: 'உதவி பெற',
       card1Title: 'எனக்கு உதவி தேவை / சேவைகளை பதிவு செய்',
       card1Desc: 'நம்பகமான உள்ளூர் கைவினைஞர்கள், எலக்ட்ரீஷியன்கள் மற்றும் தன்னார்வலர்களைக் கண்டறியவும்.',
-      card1Points: [
-        'சரிபார்க்கப்பட்ட அண்டை வீட்டார் & பின்னணி சரிபார்ப்பு',
-        'உடனடி உள்ளூர் முன்பதிவு & நேரலை கண்காணிப்பு',
-        'வெளிப்படையான மற்றும் நியாயமான கட்டணங்கள்'
-      ],
       card1Btn: 'சமூக உறுப்பினராக தொடரவும்',
       card2Role: 'சேவை வழங்க',
       card2Title: 'நான் உதவ விரும்புகிறேன் / சேவை கூட்டாளர்',
       card2Desc: 'உங்கள் திறமைகளை வழங்கி, உள்ளூர் வாடிக்கையாளர்களைப் பெற்று, நம்பிக்கையுடன் சம்பாதிக்கவும்.',
-      card2Points: [
-        'முதல் 30 நாட்களுக்கு 0% கமிஷன்',
-        'நெகிழ்வான வேலை நேரம் & உள்ளூர் தேவைகள்',
-        'நேரடி UPI உடனடி பணம் பெறுதல்'
-      ],
       card2Btn: 'சேவை கூட்டாளராக இணையுங்கள்',
       card1SignupLink: 'புதியவரா? கணக்கு உருவாக்கவும்',
       card2SignupLink: 'புதிய சேவை கூட்டாளரா? கணக்கு உருவாக்கவும்',
@@ -69,20 +49,10 @@ export const WelcomeScreen = () => {
       card1Role: 'ಸಹಾಯ ಪಡೆಯಿರಿ',
       card1Title: 'ನನಗೆ ಸಹಾಯ ಬೇಕು / ಸೇವೆಗಳನ್ನು ಬುಕ್ ಮಾಡಿ',
       card1Desc: 'ವಿಶ್ವಾಸಾರ್ಹ ಸ್ಥಳೀಯ ಸಹಾಯಕರು ಮತ್ತು ಎಲೆಕ್ಟ್ರಿಷಿಯನ್ ಗಳನ್ನು ಹುಡುಕಿ.',
-      card1Points: [
-        'ಪರಿಶೀಲಿಸಿದ ನೆರೆಹೊರೆಯವರು & ಹಿನ್ನೆಲೆ ತಪಾಸಣೆ',
-        'ತ್ವರಿತ ಸ್ಥಳೀಯ ಬುಕಿಂಗ್ & ಲೈವ್ ಟ್ರ್ಯಾಕಿಂಗ್',
-        'ಪಾರದರ್ಶಕ ನೆರೆಹೊರೆಯ ದರಗಳು'
-      ],
       card1Btn: 'ಸಮುದಾಯ ಸದಸ್ಯರಾಗಿ ಮುಂದುವರಿಯಿರಿ',
       card2Role: 'ಸೇವೆ ಒದಗಿಸಿ',
       card2Title: 'ನಾನು ಸೇವೆಗಳನ್ನು ಒದಗಿಸಲು ಬಯಸುತ್ತೇನೆ',
       card2Desc: 'ನಿಮ್ಮ ಕೌಶಲ್ಯಗಳನ್ನು ನೀಡಿ ಮತ್ತು ನೆರೆಹೊರೆಯ ನಂಬಿಕೆಯೊಂದಿಗೆ ಗಳಿಸಿ.',
-      card2Points: [
-        'ಮೊದಲ 30 ದಿನಗಳವರೆಗೆ ಶೂನ್ಯ ಕಮಿಷನ್',
-        'ಹೊಂದಿಕೊಳ್ಳುವ ಸಮಯ ಮತ್ತು ಸ್ಥಳೀಯ ವಿನಂತಿಗಳು',
-        'ನೇರ ಯುಪಿಐ ಪಾವತಿಗಳು'
-      ],
       card2Btn: 'ಸೇವಾ ಪಾಲುದಾರರಾಗಿ ಸೇರಿ',
       card1SignupLink: 'ಹೊಸಬರೇ? ಖಾತೆ ರಚಿಸಿ',
       card2SignupLink: 'ಹೊಸ ಸೇವಾ ಪಾಲುದಾರರೇ? ಖಾತೆ ರಚಿಸಿ',
@@ -165,17 +135,6 @@ export const WelcomeScreen = () => {
                 {t.card1Desc}
               </p>
 
-              <div className="space-y-2 mb-5">
-                {t.card1Points.map((pt, i) => (
-                  <div key={i} className="flex items-center gap-2 text-[#0b1c30]">
-                    <span className="w-5 h-5 rounded-full bg-[#6ffbbe] text-[#002113] flex items-center justify-center text-xs shrink-0">
-                      <span className="material-symbols-outlined text-[13px] font-bold">check</span>
-                    </span>
-                    <span className="text-xs font-semibold">{pt}</span>
-                  </div>
-                ))}
-              </div>
-
               <button
                 onClick={handleSelectMember}
                 className="w-full py-3.5 px-4 rounded-full bg-[#ff6a00] hover:bg-[#a14000] text-white text-sm font-bold flex items-center justify-center gap-2 shadow-md active:scale-98 transition-all"
@@ -217,17 +176,6 @@ export const WelcomeScreen = () => {
               <p className="text-xs text-[#dce1ff] mb-4 leading-relaxed opacity-90">
                 {t.card2Desc}
               </p>
-
-              <div className="space-y-2 mb-5">
-                {t.card2Points.map((pt, i) => (
-                  <div key={i} className="flex items-center gap-2 text-white">
-                    <span className="w-5 h-5 rounded-full bg-[#00ae78] text-white flex items-center justify-center text-xs shrink-0">
-                      <span className="material-symbols-outlined text-[13px] font-bold">check</span>
-                    </span>
-                    <span className="text-xs font-medium">{pt}</span>
-                  </div>
-                ))}
-              </div>
 
               <button
                 onClick={handleSelectPartner}

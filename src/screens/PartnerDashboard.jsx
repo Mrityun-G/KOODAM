@@ -21,17 +21,24 @@ export const PartnerDashboard = () => {
     partnerLocation,
     isFirebaseConfigured,
     activeOrder,
+    verifyArrivalOtp,
     setChatPartner,
     setIsChatOpen
   } = useApp();
 
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+  const [arrivalInput, setArrivalInput] = useState('');
 
   // Format countdown seconds into mm:ss
   const formatTime = (secs) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const handleVerifyArrival = () => {
+    if (arrivalInput.length !== 4) return;
+    if (verifyArrivalOtp(arrivalInput)) setArrivalInput('');
   };
 
   return (
@@ -206,6 +213,57 @@ export const PartnerDashboard = () => {
           </div>
           <span className="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
         </button>
+
+        {/* Arrival Code Verification — shown once the partner is en route to an accepted job */}
+        {activeOrder.currentStep === 3 && (
+          <section className="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-full bg-[#ffdbcc] text-[#a14000] flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[18px]">pin</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-[#0b1c30]">Verify Arrival Code</p>
+                <p className="text-[11px] text-slate-500 truncate">Ask the customer for their 4-digit code to start the job</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                value={arrivalInput}
+                onChange={(e) => setArrivalInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                placeholder="Enter code"
+                inputMode="numeric"
+                className="flex-1 rounded-xl border border-slate-200 bg-[#f8f9ff] px-3 py-2.5 text-sm font-mono tracking-widest text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#ff6a00]/40"
+              />
+              <button
+                onClick={handleVerifyArrival}
+                disabled={arrivalInput.length !== 4}
+                className="shrink-0 px-4 py-2.5 rounded-xl bg-[#ff6a00] hover:bg-[#a14000] disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-bold active:scale-95 transition-all"
+              >
+                Verify & Start
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* Completion Code — shown to the partner to share with the customer once work is done */}
+        {activeOrder.currentStep === 4 && activeOrder.completionOtp && (
+          <section className="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full bg-[#6ffbbe]/40 text-[#006c49] flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[18px]">task_alt</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-[#0b1c30]">Share Completion Code</p>
+                <p className="text-[11px] text-slate-500 truncate">Give this code to the customer once the job is done</p>
+              </div>
+            </div>
+            <div className="shrink-0 bg-[#eff4ff] px-3 py-1.5 rounded-xl border border-slate-200">
+              <span className="text-base tracking-widest text-[#a14000] font-extrabold font-mono">
+                {activeOrder.completionOtp}
+              </span>
+            </div>
+          </section>
+        )}
 
         {/* Incoming High-Priority Job Request Card (Flash alert style) */}
         {hasIncomingJob && (

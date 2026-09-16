@@ -8,6 +8,7 @@ export const LiveTrackingScreen = () => {
   const {
     activeOrder,
     advanceOrderStatus,
+    verifyCompletionOtp,
     submitRating,
     setIsChatOpen,
     setChatPartner,
@@ -28,10 +29,16 @@ export const LiveTrackingScreen = () => {
   const [hoverStar, setHoverStar] = useState(0);
   const [selectedStar, setSelectedStar] = useState(0);
   const [feedbackText, setFeedbackText] = useState('');
+  const [completionInput, setCompletionInput] = useState('');
 
   const handleSubmitRating = () => {
     if (selectedStar === 0) return;
     submitRating(selectedStar, feedbackText.trim());
+  };
+
+  const handleVerifyCompletion = () => {
+    if (completionInput.length !== 4) return;
+    if (verifyCompletionOtp(completionInput)) setCompletionInput('');
   };
 
   const handleCopyPin = () => {
@@ -58,13 +65,15 @@ export const LiveTrackingScreen = () => {
       id: 3,
       title: 'Helper En Route',
       time: 'Now',
-      desc: `${displayEtaMinutes} mins away${liveDistanceKm != null ? ` (${liveDistanceKm.toFixed(1)} km)` : ''} • ${partnerLocation ? 'Live GPS' : 'Smooth traffic on 100 Feet Rd'}`
+      desc: activeOrder.currentStep === 3
+        ? `${displayEtaMinutes} mins away${liveDistanceKm != null ? ` (${liveDistanceKm.toFixed(1)} km)` : ''} • Share your arrival code once they reach you`
+        : `${displayEtaMinutes} mins away${liveDistanceKm != null ? ` (${liveDistanceKm.toFixed(1)} km)` : ''} • ${partnerLocation ? 'Live GPS' : 'Smooth traffic on 100 Feet Rd'}`
     },
     {
       id: 4,
       title: 'Service in Progress',
       time: 'Pending',
-      desc: 'Diagnostics and circuit switchboard check.'
+      desc: 'Diagnostics and circuit switchboard check. Enter the completion code once done.'
     },
     {
       id: 5,
@@ -275,14 +284,16 @@ export const LiveTrackingScreen = () => {
             <div className="bg-[#dce9ff]/70 rounded-2xl p-3 flex items-center justify-between gap-2 border border-slate-200/60">
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-8 h-8 rounded-full bg-[#ffdbcc] text-[#a14000] flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[18px]">lock</span>
+                  <span className="material-symbols-outlined text-[18px]">
+                    {activeOrder.currentStep >= 4 ? 'verified' : 'lock'}
+                  </span>
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                     Arrival Safety Code
                   </span>
                   <span className="text-xs text-[#0b1c30] font-medium truncate">
-                    Share only upon arrival
+                    {activeOrder.currentStep >= 4 ? 'Verified — work has started' : 'Share only upon arrival'}
                   </span>
                 </div>
               </div>
@@ -303,6 +314,39 @@ export const LiveTrackingScreen = () => {
               </div>
             </div>
           </div>
+
+          {/* Completion Verification Card — shown once the partner has started work */}
+          {activeOrder.currentStep === 4 && (
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-[#6ffbbe]/40 text-[#006c49] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[18px]">task_alt</span>
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-[#0b1c30]">Confirm Job Completion</h3>
+                  <p className="text-[11px] text-slate-500">
+                    Once you're happy with the work, ask {activeOrder.helperName} for the completion code.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  value={completionInput}
+                  onChange={(e) => setCompletionInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  placeholder="Enter 4-digit code"
+                  inputMode="numeric"
+                  className="flex-1 rounded-xl border border-slate-200 bg-[#f8f9ff] px-3 py-2.5 text-sm font-mono tracking-widest text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#ff6a00]/40"
+                />
+                <button
+                  onClick={handleVerifyCompletion}
+                  disabled={completionInput.length !== 4}
+                  className="shrink-0 px-4 py-2.5 rounded-xl bg-[#ff6a00] hover:bg-[#a14000] disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-bold active:scale-95 transition-all"
+                >
+                  Verify & Pay
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Live GPS Map Card */}
           <div className="relative w-full h-36 rounded-2xl overflow-hidden shadow-xs flex flex-col justify-end p-3 border border-slate-200">
@@ -341,12 +385,18 @@ export const LiveTrackingScreen = () => {
                 <h3 className="text-sm font-bold text-[#0b1c30]">Timeline Progress</h3>
                 <p className="text-[11px] text-slate-500">Tap to simulate real-time stage advance</p>
               </div>
-              <button
-                onClick={advanceOrderStatus}
-                className="text-[11px] font-bold bg-[#eff4ff] text-[#a14000] hover:bg-[#dce9ff] px-2.5 py-1 rounded-full border border-slate-200 active:scale-95 transition-all"
-              >
-                Simulate Next Step ▶
-              </button>
+              {activeOrder.currentStep === 3 ? (
+                <span className="text-[11px] font-bold text-slate-400">Waiting for arrival code…</span>
+              ) : activeOrder.currentStep === 4 ? (
+                <span className="text-[11px] font-bold text-slate-400">Waiting for completion code…</span>
+              ) : (
+                <button
+                  onClick={advanceOrderStatus}
+                  className="text-[11px] font-bold bg-[#eff4ff] text-[#a14000] hover:bg-[#dce9ff] px-2.5 py-1 rounded-full border border-slate-200 active:scale-95 transition-all"
+                >
+                  Simulate Next Step ▶
+                </button>
+              )}
             </div>
 
             <div className="relative flex flex-col mt-1">

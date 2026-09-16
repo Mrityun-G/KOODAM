@@ -123,6 +123,7 @@ export const AppProvider = ({ children }) => {
     helperName: 'Arun Varma',
     serviceTitle: 'Emergency Diagnostic',
     safetyPin: '4821',
+    completionOtp: null,
     currentStep: 3, // 1: Confirmed, 2: Assigned, 3: En Route, 4: In Progress, 5: Completed
     etaMinutes: 12,
     etaTime: '10:45 AM',
@@ -572,6 +573,47 @@ export const AppProvider = ({ children }) => {
     });
   };
 
+  const generateOtp = () => String(Math.floor(1000 + Math.random() * 9000));
+
+  // Service partner enters the code the customer reads out on arrival.
+  // Only once it matches does the job move to "in progress" — this stops a
+  // partner from starting (and getting paid for) a job at the wrong address.
+  const verifyArrivalOtp = (code) => {
+    if (code !== activeOrder.safetyPin) {
+      showToast('Incorrect arrival code — ask the customer to confirm it.');
+      return false;
+    }
+    const completionOtp = generateOtp();
+    // Clear out any rating left over from a previous job on this order, so the
+    // customer always has to pick a fresh rating once this job is verified done.
+    updateActiveOrder({ currentStep: 4, completionOtp, etaMinutes: 0, rating: null, feedback: '' });
+    addNotification('member', {
+      title: 'Work Started',
+      desc: `${activeOrder.helperName} verified your arrival code and has started the service.`,
+      screen: 'tracking',
+      tab: 'requests'
+    });
+    showToast('Arrival code verified — work has started!');
+    return true;
+  };
+
+  // Customer enters the code the partner reads out once the job is done.
+  // This is the customer's sign-off that they're happy with the work before
+  // the order is marked complete and the payment is settled.
+  const verifyCompletionOtp = (code) => {
+    if (code !== activeOrder.completionOtp) {
+      showToast('Incorrect completion code — ask your service partner to confirm it.');
+      return false;
+    }
+    updateActiveOrder({ currentStep: 5 });
+    addNotification('partner', {
+      title: 'Job Verified & Paid',
+      desc: `The customer confirmed completion for ${activeOrder.serviceTitle}. Payment has been settled.`
+    });
+    showToast('Service verified! Payment completed.');
+    return true;
+  };
+
   const submitRating = (stars, feedback = '') => {
     updateActiveOrder({ rating: stars, feedback });
 
@@ -741,6 +783,8 @@ export const AppProvider = ({ children }) => {
         handleProceedToPayment,
         handleConfirmBooking,
         advanceOrderStatus,
+        verifyArrivalOtp,
+        verifyCompletionOtp,
         submitRating,
         togglePartnerDuty,
         acceptIncomingJob,

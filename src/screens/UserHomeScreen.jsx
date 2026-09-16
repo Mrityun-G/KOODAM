@@ -92,7 +92,6 @@ export const UserHomeScreen = () => {
   return (
     <div className="flex-1 flex flex-col relative w-full bg-[#f8f9ff]">
       <Header subtitle="Home" />
-      <VoiceAssistant />
 
       <main className="flex-1 flex flex-col relative w-full pb-6">
         {/* Search & Filter Bar Section */}
@@ -115,6 +114,7 @@ export const UserHomeScreen = () => {
                 </button>
               )}
             </div>
+            <VoiceAssistant />
             <button
               aria-label="Filter Options"
               onClick={() => {
